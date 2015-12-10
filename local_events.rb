@@ -2,11 +2,15 @@ require "pry"
 require "net/http"
 require "json"
 
-city = "Boston"
-state = "MA"
 today = Time.now.strftime("%Y-%m-%d")
 
-uri = URI("http://api.seatgeek.com/2/events?venue.city=#{city}&venue.state=#{state}")
+if ARGV.length > 2
+  last = ARGV.pop
+  first = ARGV.join("+")
+  ARGV = [first, last]
+end
+
+uri = URI("http://api.seatgeek.com/2/events?venue.city=#{ARGV[0]}&venue.state=#{ARGV[1]}")
 response = Net::HTTP.get_response(uri)
 
 events = JSON.parse(response.body)["events"]
